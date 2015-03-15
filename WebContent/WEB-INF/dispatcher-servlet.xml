@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context   
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	
+<bean id="beanNameResolver"
+       class="org.springframework.web.servlet.view.BeanNameViewResolver"
+       p:order="0" />
+<bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView"/>       
+       
+       
+	
+	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+	<context:property-placeholder location="classpath:config/db.properties" />
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+	</bean>
+	
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:config/sqlMapConfig.xml"/>
+	</bean>
+	
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+
+	<!--  요청 url 과 Controller 매핑  -->
+	<bean name="/main.do" class="controller.Main"></bean>
+	
+	<bean name="/item.do" class="controller.Item">
+		<property name="itemDao" ref="itemDao"/>
+	</bean>
+	<bean id="daumVo" class="vo.item.Daum"/>
+	<bean id="itemVo" class="vo.item.ItemVo"></bean>
+	<bean id="itemDao" class="dao.item.ItemDao">
+			<constructor-arg ref="sqlMapClientTemplate"/>
+	</bean>
+	<bean id="daumDao" class="dao.item.DaumDao">
+		<constructor-arg ref="sqlMapClientTemplate"/>
+	</bean>
+	
+	
+	<bean name="/common/*.do" class="controller.Common">
+		<property name="itemDao" ref="itemDao"/>
+	</bean>	
+	
+	<bean name="/lovelist/*.do" class="controller.login.LoveList">
+		<property name="itemDao" ref="itemDao"/>
+		<property name="userDao" ref="userDao"/>
+	</bean>	
+	
+	<bean name="/reg_room.do" class="controller.Reg_Room"></bean>
+
+		<!-- Login Success -->
+		<bean name="/loginSuccess.do" class="controller.login.LoginSuccess">
+			<property name="userDao" ref="userDao"/>
+		</bean>
+		<!-- Logout Success -->
+		<bean name="/logout.do" class="controller.login.LogoutSuccess">
+		</bean>
+	<!-- MY PAGE -->
+		<bean name="/mypage.do" class="controller.login.MyPage">
+			<property name="itemDao" ref="itemDao"/>
+			<property name="userDao" ref="userDao"/>
+		</bean>
+			<!--  Join 페이지 -->
+		<bean name="/join.do" class="controller.join.Join">
+			<property name="userDao" ref="userDao"/>
+		</bean>
+		
+	<bean id="userDao" class="dao.user.UserDao">
+		<constructor-arg ref="sqlMapClientTemplate"/>
+	</bean>
+	
+	<!-- Vo bean -->
+	<bean id="userVo" class="vo.user.User"/>
+	
+
+
+	<!-- 컨트롤러의 처리 결과를 보여줄 뷰를 선택하는 방식 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+</beans>

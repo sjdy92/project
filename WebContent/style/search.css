@@ -1,0 +1,56 @@
+
+#search_container {
+	position:absolute;
+	width:500px;
+	left: 50%;
+	margin-left: -200px;
+	z-index: 5;
+	background-color:#fffdf1;
+	padding: 5px;
+	border: 1px solid #999;
+	opacity:0.85;
+}
+
+#address{width:400px;}
+
+   a{          text-decoration:none;}
+   table{border-collapse:collapse; border-style:transparent;}
+      #address {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 450px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+
+        border: 1px solid transparent;
+        border-radius: 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 40px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #address:focus {
+        border-color: #4d90fe;
+      }
+
+      #searchChart{
+          text-align:center;
+          font-size:16px;
+          height:50px;
+           
+      }
+       #searchChart>p{font-size:18px;}
+
+       th{color:black;}
+
+       .searchType{
+           padding: 6px 30px ;
+       }
+
+       .searchSection{background-color:#c8f2b6;}
+       #all{background-color:#c8f2b6;}
+      
